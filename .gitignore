@@ -28,9 +28,18 @@ env.bak/
 venv.bak/
 
 # Environment variables
+# Global .env files
 .env
+.env.*
+!.env.example
+
+# Local environment files
 .env.local
 .env.*.local
+
+# App specific .env files
+/Backend/app/.env
+/Backend/app/.env.*
 
 # IDE specific files
 .idea/
