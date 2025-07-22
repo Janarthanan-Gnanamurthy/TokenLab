@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     
     # Database
-    DATABASE_URL: str = "postgresql://user:password@localhost/tokenlab_db"
+    DATABASE_URL: str = "postgresql://postgres:postgres123@metis.c1o4a8yukdml.eu-north-1.rds.amazonaws.com:5432/postgres"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
