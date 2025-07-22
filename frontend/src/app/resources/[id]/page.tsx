@@ -32,7 +32,9 @@ const ResourceDetailPage = () => {
   useEffect(() => {
     const fetchService = async () => {
       try {
-        const response = await fetch(`/api/v1/services/${params.id}`);
+        const response = await fetch(
+          `http://localhost:8000/api/v1/services/${params.id}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch service");
         }
@@ -55,13 +57,16 @@ const ResourceDetailPage = () => {
 
     setIsEditing(true);
     try {
-      const response = await fetch(`/api/v1/services/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(service),
-      });
+      const response = await fetch(
+        `http://localhost:8000/api/v1/services/${params.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(service),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update service");
@@ -90,9 +95,12 @@ const ResourceDetailPage = () => {
 
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/v1/services/${params.id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:8000/api/v1/services/${params.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete service");
