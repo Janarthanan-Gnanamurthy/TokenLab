@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   name: string;
@@ -21,52 +21,60 @@ interface FormData {
 export default function AddNewService() {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    description: '',
-    endpoint_url: '',
-    pricing_model: 'per_call',
+    name: "",
+    description: "",
+    endpoint_url: "",
+    pricing_model: "per_call",
     base_price: 0,
-    currency: 'ETH',
-    category: '',
-    tags: '',
+    currency: "ETH",
+    category: "",
+    tags: "",
     rate_limit: 10,
     timeout: 30,
-    provider_address: '',
-    api_spec: '{}',
+    provider_address: "",
+    api_spec: "{}",
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'base_price' || name === 'rate_limit' || name === 'timeout' 
-        ? Number(value) 
-        : value,
+      [name]:
+        name === "base_price" || name === "rate_limit" || name === "timeout"
+          ? Number(value)
+          : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // Convert tags string to array
-      const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      
+      const tagsArray = formData.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag);
+
       const submitData = {
         ...formData,
         tags: tagsArray,
-        api_spec: JSON.parse(formData.api_spec)
+        api_spec: JSON.parse(formData.api_spec),
       };
-      
-      const response = await fetch('/api/v1/services', {
-        method: 'POST',
+
+      const response = await fetch("http://localhost:8000/api/v1/services", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(submitData),
       });
@@ -74,13 +82,13 @@ export default function AddNewService() {
       if (response.ok) {
         // Success animation and redirect
         setTimeout(() => {
-          router.push('/resources');
+          router.push("/resources");
         }, 1500);
       } else {
-        throw new Error('Failed to create service');
+        throw new Error("Failed to create service");
       }
     } catch (error) {
-      console.error('Error creating service:', error);
+      console.error("Error creating service:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -104,10 +112,14 @@ export default function AddNewService() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Service Details</h2>
-              <p className="text-gray-600">Let's start with the basic information about your service</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Service Details
+              </h2>
+              <p className="text-gray-600">
+                Let's start with the basic information about your service
+              </p>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -123,7 +135,7 @@ export default function AddNewService() {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Description *
@@ -138,7 +150,7 @@ export default function AddNewService() {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Category *
@@ -161,7 +173,7 @@ export default function AddNewService() {
                   <option value="Other">Other</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Tags
@@ -174,20 +186,26 @@ export default function AddNewService() {
                   placeholder="ai, weather, data, api (comma separated)"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
-                <p className="text-sm text-gray-500 mt-1">Separate multiple tags with commas</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Separate multiple tags with commas
+                </p>
               </div>
             </div>
           </div>
         );
-        
+
       case 2:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Technical Configuration</h2>
-              <p className="text-gray-600">Configure the technical aspects of your service</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Technical Configuration
+              </h2>
+              <p className="text-gray-600">
+                Configure the technical aspects of your service
+              </p>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -198,12 +216,12 @@ export default function AddNewService() {
                   name="endpoint_url"
                   value={formData.endpoint_url}
                   onChange={handleChange}
-                  placeholder="https://api.example.com/v1/service"
+                  placeholder="https:/.example.com/v1/service"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   required
                 />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -218,7 +236,7 @@ export default function AddNewService() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Timeout (seconds)
@@ -233,7 +251,7 @@ export default function AddNewService() {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Provider Address *
@@ -248,7 +266,7 @@ export default function AddNewService() {
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   API Specification (JSON)
@@ -261,20 +279,26 @@ export default function AddNewService() {
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 font-mono text-sm resize-none"
                 />
-                <p className="text-sm text-gray-500 mt-1">Optional: Provide API specification in JSON format</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Optional: Provide API specification in JSON format
+                </p>
               </div>
             </div>
           </div>
         );
-        
+
       case 3:
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Pricing & Business</h2>
-              <p className="text-gray-600">Set up your pricing model and business details</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Pricing & Business
+              </h2>
+              <p className="text-gray-600">
+                Set up your pricing model and business details
+              </p>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -293,7 +317,7 @@ export default function AddNewService() {
                   <option value="free">Free</option>
                 </select>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -309,7 +333,7 @@ export default function AddNewService() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Currency
@@ -330,7 +354,7 @@ export default function AddNewService() {
             </div>
           </div>
         );
-        
+
       default:
         return null;
     }
@@ -342,12 +366,26 @@ export default function AddNewService() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <svg
+              className="w-8 h-8 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Service</h1>
-          <p className="text-gray-600">Deploy your API service on the TokenLab marketplace</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Create New Service
+          </h1>
+          <p className="text-gray-600">
+            Deploy your API service on the TokenLab marketplace
+          </p>
         </div>
 
         {/* Progress Bar */}
@@ -358,13 +396,23 @@ export default function AddNewService() {
                 <div
                   className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
                     step <= currentStep
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-500'
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   {step < currentStep ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   ) : (
                     step
@@ -373,7 +421,7 @@ export default function AddNewService() {
                 {step < totalSteps && (
                   <div
                     className={`flex-1 h-1 mx-4 rounded-full ${
-                      step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
+                      step < currentStep ? "bg-blue-600" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -389,7 +437,7 @@ export default function AddNewService() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit}>
             {renderStepContent()}
-            
+
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
               <button
@@ -398,13 +446,13 @@ export default function AddNewService() {
                 disabled={currentStep === 1}
                 className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                   currentStep === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 Previous
               </button>
-              
+
               {currentStep < totalSteps ? (
                 <button
                   type="button"
@@ -419,8 +467,8 @@ export default function AddNewService() {
                   disabled={isSubmitting}
                   className={`px-8 py-3 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     isSubmitting
-                      ? 'bg-blue-400 cursor-not-allowed'
-                      : 'bg-blue-600 hover:bg-blue-700'
+                      ? "bg-blue-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
                   } text-white`}
                 >
                   {isSubmitting ? (
@@ -429,7 +477,7 @@ export default function AddNewService() {
                       <span>Creating Service...</span>
                     </div>
                   ) : (
-                    'Create Service'
+                    "Create Service"
                   )}
                 </button>
               )}
